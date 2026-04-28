@@ -1,0 +1,10 @@
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+node_modules/
+.cache/
+*.log
+.claude/
+CLAUDE.md
