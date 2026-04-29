@@ -74,16 +74,34 @@ Do not write `<style scoped>` to bypass. **STOP** and report:
 
 ## Reuse / abstraction ladder (utilities suffice but the same class string repeats across files)
 
-Different from the previous section ("utilities cannot express it") — here utilities cover the styling, but the same class list appears repeatedly across files. Pick by scenario (official `styling-with-utility-classes` guidance):
+Different from the previous section ("utilities cannot express it") — here utilities cover the styling, but the same class list appears repeatedly. Official `styling-with-utility-classes` branches by **project type**, not by element complexity:
 
-| Scenario | Solution |
+| Scenario | Vue / React / Svelte / Solid | ERB / Twig / Blade / Nunjucks |
+|---|---|---|
+| Repetition within one file | Loop / multi-cursor — no abstraction | same |
+| Cross-file reuse, any complexity | **Component** — official "best strategy", applies even to single-element btn / card / badge | Template partial (multi-element, "highly recommended"); single-element small class may degrade to `@layer components` when a partial "feels heavy-handed" |
+| Overriding third-party library styles | `@layer components` — official example `.select2-dropdown` | same |
+
+In Vue / React / Svelte, `<Btn>` `<Card>` cost about the same to write as a `.btn` / `.card` CSS class — the "template partial feels heavy-handed" tradeoff that justifies `@layer components` in ERB / Twig **does not apply**. A project-internal single-element `@layer components .x` in a framework project is a degraded form, not the first choice. Self-check: **"Can I put a `class=` on this element, or wrap it in a component?"** Yes → component.
+
+v4 idiom: official `@layer components` examples write CSS properties directly and reference theme variables via `var(--…)`, not via `@apply`. The official position of `@apply` in v4 is "override third-party library styles", **not the standard tool for reusing utility strings**.
+
+## When custom CSS IS the first-line answer (not a fallback)
+
+Even in Vue / React / Svelte, custom CSS is the official first choice — not a degradation — when you **cannot attach a class or wrap a component** around the target DOM, or when the styling target is not class-based at all:
+
+| Situation | Where to write |
 |---|---|
-| Repetition within a single file | Loops / multi-cursor editing — **no abstraction** |
-| Cross-file reuse of a complex component (multi-element structure) | Component / template partial (official "best strategy") |
-| Cross-file reuse of a single-element simple class (btn / card / badge) | `@layer components { .x { CSS properties + var(--token) directly } }` |
-| Overriding third-party library styles | `@apply` or `@layer components` — either works |
+| Third-party widget injects DOM you don't render (Select2, Flatpickr, FullCalendar, chart tooltips, Tiptap, datepickers, etc.) | `@layer components { .select2-dropdown { ... } }` — official example |
+| Markdown / CMS / WYSIWYG rendered HTML (no per-element component) | `@layer components { .prose h1 { ... } .prose p { ... } }` |
+| SVG charts where the library emits hardcoded class names (D3, ECharts, Chart.js inner SVG) | `@layer components` with descendant selectors |
+| Element-level resets (button cursor, placeholder color, scrollbar, list reset) | `@layer base { button { cursor: pointer } }` |
+| Global pseudo-elements (`::selection`, `::-webkit-scrollbar`, `::placeholder`) | `@layer base` |
+| `@font-face`, `@keyframes` definitions | top-level CSS; animation tokens go in `@theme` |
+| New atomic CSS feature Tailwind doesn't ship | `@utility name { ... }` — not `@layer components` |
+| Theme tokens (colors, spacing, shadows, easings) | `@theme { --color-x: ... }` — not a class |
 
-v4 idiom: the official `@layer components` examples (`.btn-primary` / `.card`) **write CSS properties directly and reference theme variables via `var(--…)`**, not via `@apply`. The official position of `@apply` in the v4 docs is "override third-party library styles", **not the standard tool for reusing utility strings**.
+Official wording: "Using Tailwind you probably don't need these types of classes as often as you think" — meaning project-internal `.btn` / `.card` are usually replaceable by components, but the rows above are the cases that **do** still need custom CSS, and rightfully so.
 
 ## Complex arbitrary values → @theme token
 
