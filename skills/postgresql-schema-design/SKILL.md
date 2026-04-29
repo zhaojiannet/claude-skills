@@ -105,6 +105,7 @@ CREATE TABLE users (
 - `JSON` type. Use `JSONB`.
 - camelCase column names like `userId`, `createdAt`.
 - Tables/columns prefixed with `tbl_` / `col_`.
+- A new column / index / constraint when the existing schema already defines an equivalent. grep `migrations/` and `schema/` first; reuse or extend if found.
 
 ## When the design is unconventional
 

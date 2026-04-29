@@ -74,6 +74,7 @@ INSERT INTO users (email, org_id) VALUES ($1, $2) RETURNING *;
 - Mixing pgx and `database/sql` in the same project. Pick one—`pgx/v5` preferred.
 - String concatenation to build dynamic queries. Use `sqlc.arg()`, `sqlc.embed()`, or write multiple named queries.
 - Query names that do not start with one of the prefixes above. `FetchUser`, `RetrieveUserByEmail` — pick the canonical prefix.
+- A new query when an existing one in `db/queries/*.sql` already covers the use case. grep query names and the underlying `SELECT/INSERT/UPDATE/DELETE` first; reuse or extend if found.
 
 ## When sqlc cannot express what you need
 

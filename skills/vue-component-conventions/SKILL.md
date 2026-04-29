@@ -90,6 +90,7 @@ const id = useId()
 
 - Side effects in `mounted` / `beforeMount` Options hooks — use `onMounted()` / `watchEffect()`.
 - Async cleanup logic via flag tracking — use `onWatcherCleanup()` (3.5+).
+- Hand-written composable (`useXxx`) when the project already exposes one under `composables/` (or auto-imported via Nuxt). grep `composables/` and `app/composables/` first; reuse if found.
 
 ## Component decomposition
 

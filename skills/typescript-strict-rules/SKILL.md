@@ -48,6 +48,7 @@ Apply only when the project uses `typescript ^5.0` or higher. If `package.json` 
 - Hand-written type guards when the project already uses zod / valibot / effect-schema. Use the schema library's `parse` / `safeParse`.
 - Hand-written utility when Node standard library or already-installed deps cover it: `crypto.randomUUID()` (Node 14.17+), `structuredClone()` (Node 17+), `Promise.withResolvers()` (Node 22+); reach for `lodash` / `date-fns` if already in `package.json` instead of writing your own debounce / formatDate.
 - Monkey-patching globals (`Array.prototype.foo = ...`, `String.prototype.bar = ...`). Use a utility module instead.
+- Hand-written utility (`formatDate` / `debounce` / `cn` / `sleep` / type guard) when the project already exposes one under `src/utils/`, `src/lib/`, or similar. grep first; reuse if found.
 
 ## Inference > explicit annotation
 

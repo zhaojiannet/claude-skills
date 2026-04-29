@@ -34,6 +34,7 @@ Apply when editing any SQL file under `migrations/` (or equivalent migration too
 - `ALTER TABLE foo ALTER COLUMN bar TYPE int USING bar::int;` on a large table. Same rewrite problem.
 - Migration without `BEGIN; ... COMMIT;` (unless the operation cannot run in a transaction).
 - Mixing data backfill (UPDATE millions of rows) with schema change in one transaction. Long-running transactions hold locks and bloat WAL.
+- A new migration when an unmerged migration in the same branch already changes the same table/column. grep `migrations/` first; consolidate if found.
 
 ## Safe pattern: add NOT NULL column
 

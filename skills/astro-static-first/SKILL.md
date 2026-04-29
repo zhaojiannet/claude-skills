@@ -45,6 +45,7 @@ Pick the first directive that fits, top to bottom:
 - `getStaticPaths` returning thousands of paths without pagination or filtering. Build time grows.
 - `Astro.glob('../posts/*.md')`. Deprecated in Astro v5+. Use Content Collections (`getCollection()`) for content/markdown with typed schemas, or `import.meta.glob()` (with `eager: true` if you need synchronous import) for other file types.
 - Mixing `output: 'static'` with `client:load` on dynamic components that need fresh data per request. Use `server:defer` or set `prerender = false` for that route.
+- A new island / component when the project already has an equivalent under `src/components/`. grep first; reuse or extend if found.
 
 ## Server islands
 

@@ -162,6 +162,7 @@ func customErrorHandler(err error, c *echo.Context) {
 - Hand-rolled CORS / rate-limiter / logger / recover / request-id middleware. Use echo's built-in `middleware` package: `middleware.CORS()`, `middleware.RateLimiter(...)`, `middleware.Logger()`, `middleware.Recover()`, `middleware.RequestID()`.
 - Hand-rolled JWT auth. In v5, JWT lives in the standalone package `github.com/labstack/echo-jwt`—install it instead of writing token parsing yourself.
 - Hand-rolled router on top of `net/http` when echo is already in scope. Stick to `e.GET` / `e.POST` / `e.Group(...)`.
+- Hand-written middleware / handler helper when the project already has one under `internal/middleware/`, `pkg/middleware/`, or similar. grep first; reuse if found.
 
 ## Common antipatterns
 

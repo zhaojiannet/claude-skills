@@ -94,6 +94,7 @@ fastify.post('/users', { schema: createUserSchema }, async (req, reply) => {
 - Registering plugins after `fastify.listen()`. Order: register all plugins → `await fastify.ready()` → `fastify.listen()`.
 - Hand-rolled CORS / cookie / rate-limit / helmet / multipart / static / websocket. Use the official plugins: `@fastify/cors`, `@fastify/cookie`, `@fastify/rate-limit`, `@fastify/helmet`, `@fastify/multipart`, `@fastify/static`, `@fastify/websocket`.
 - Hand-rolled runtime type guards when the route `schema` + type provider already covers it. Pick a type provider: `@fastify/type-provider-typebox` (official) or `fastify-type-provider-zod` (community, no `@fastify/` prefix).
+- Writing a new plugin when the project already has one under `src/plugins/` or `plugins/` covering the same concern (cors, auth, db connection, etc.). grep first; reuse if found.
 
 ## Encapsulation in practice
 

@@ -44,6 +44,7 @@ Apply only when the project uses `tailwindcss ^4.0` or higher. If `package.json`
 - Numeric arbitrary values like `text-[16px]` / `p-[8px]` — use the token (`text-base` / `p-2`).
 - Custom colors as `#hex` / `rgb()` — write `oklch(L C H)` to match the v4 palette.
 - JS-driven class toggles for hover/focus/resize that a Tailwind variant or container query already covers.
+- Hand-written `@utility name { ... }` or `@theme { --token-X: ... }` when the entry CSS (`app.css` / `main.css`) already defines an equivalent. grep first; reuse if found.
 
 ## Deprecated → Current
 

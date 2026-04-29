@@ -64,6 +64,7 @@ Apply only when the project uses `@nuxt/ui ^4.0` or higher. If `package.json` pi
 - Hand-coded color-mode toggle — use `UColorModeButton`
 - Overriding Nuxt UI internal class names with `:deep()` selectors — use the component's official `ui` prop / `slots` / `class` / variant props
 - Custom CSS for component states (`hover` / `active`) when the component already exposes them via prop or variant
+- Hand-written wrapper component (e.g. `<MyButton>` that just re-styles `UButton`) when the project already has one under `components/` or `app/components/`. grep first; reuse if found.
 
 ## Installation reference (v4)
 
