@@ -26,7 +26,7 @@ Apply only when the project uses `tailwindcss ^4.0` or higher. If `package.json`
 
 ## Forbidden patterns
 
-### 配置 / 构建
+### Config / build
 
 - `tailwind.config.js`/`.ts` with `theme` / `content` / `darkMode` — express in CSS via `@theme` / `@source` / `@custom-variant`
 - `@tailwind base/components/utilities` — use `@import "tailwindcss";`
@@ -34,7 +34,7 @@ Apply only when the project uses `tailwindcss ^4.0` or higher. If `package.json`
 - Manual `postcss-import` / `autoprefixer` — built in
 - Legacy directives `@variants` / `@responsive` / `@screen` — gone, use variant prefixes directly
 
-### CSS 写法
+### CSS authoring
 
 - `<style scoped>` in component files, scattered raw `.css/.scss`. **Allowed**: entry CSS may have `@layer components { ... }` for reusable composite classes and `@layer base { ... }` for preflight overrides.
 - `[var(--xxx)]` for variable arbitrary values — use `(--xxx)` parens. Square brackets are for **static** values only (`w-[500px]`, `grid-cols-[max-content_auto]`).
@@ -48,23 +48,23 @@ Apply only when the project uses `tailwindcss ^4.0` or higher. If `package.json`
 
 ## Deprecated → Current
 
-| ❌ 不要写 | ✅ 改用 |
+| ❌ Don't write | ✅ Use instead |
 |---|---|
-| `bg-opacity-50` / `text-opacity-*` 等 `*-opacity-*` | `bg-color/50` / `text-color/50`（slash 透明度） |
+| `bg-opacity-50` / `text-opacity-*` and other `*-opacity-*` | `bg-color/50` / `text-color/50` (slash opacity) |
 | `flex-shrink-*` / `flex-grow-*` | `shrink-*` / `grow-*` |
 | `bg-gradient-to-r` | `bg-linear-to-r` |
 | `outline-none` | `outline-hidden` |
-| `shadow-sm` / `shadow`（scale 整体下移） | `shadow-xs` / `shadow-sm` |
+| `shadow-sm` / `shadow` (scale shifted down) | `shadow-xs` / `shadow-sm` |
 | `rounded-sm` / `blur-sm` | `rounded-xs` / `blur-xs` |
-| `ring`（默认 3px blue-500） | `ring-3 ring-blue-500`（默认改 1px currentColor） |
-| `!flex` 前缀 important | `flex!` 后缀 important |
-| `first:*:pt-0`（变体右→左） | `*:first:pt-0`（变体左→右） |
+| `ring` (default 3px blue-500) | `ring-3 ring-blue-500` (default is now 1px currentColor) |
+| `!flex` (prefix important) | `flex!` (suffix important) |
+| `first:*:pt-0` (variant right→left) | `*:first:pt-0` (variant left→right) |
 | `@layer utilities { .x {} }` | `@utility x {}` |
-| `theme(spacing.12)` | `var(--spacing-12)` 或 `--spacing(12)` |
+| `theme(spacing.12)` | `var(--spacing-12)` or `--spacing(12)` |
 | `overflow-ellipsis` | `text-ellipsis` |
 | `decoration-slice` / `decoration-clone` | `box-decoration-slice` / `box-decoration-clone` |
-| `space-y-*` 后代选择器 | `flex flex-col gap-*`（更可预期） |
-| `border` 默认 gray-200 | 显式 `border-gray-200`（默认已改 `currentColor`） |
+| `space-y-*` (descendant selector) | `flex flex-col gap-*` (more predictable) |
+| `border` defaulting to gray-200 | explicit `border-gray-200` (default is now `currentColor`) |
 
 ## When utilities are not enough
 
@@ -72,50 +72,67 @@ Do not write `<style scoped>` to bypass. **STOP** and report:
 
 > Need [visual/behavior]. Tried utility composition [classes attempted]. Cannot express [missing capability]. Approve one of: (A) register `@theme { --xxx: ... }` token, (B) add `@utility xxx { ... }`, (C) add `@layer components { .xxx { ... } }`, (D) use a UI library component.
 
+## Reuse / abstraction ladder (utilities suffice but the same class string repeats across files)
+
+Different from the previous section ("utilities cannot express it") — here utilities cover the styling, but the same class list appears repeatedly across files. Pick by scenario (official `styling-with-utility-classes` guidance):
+
+| Scenario | Solution |
+|---|---|
+| Repetition within a single file | Loops / multi-cursor editing — **no abstraction** |
+| Cross-file reuse of a complex component (multi-element structure) | Component / template partial (official "best strategy") |
+| Cross-file reuse of a single-element simple class (btn / card / badge) | `@layer components { .x { CSS properties + var(--token) directly } }` |
+| Overriding third-party library styles | `@apply` or `@layer components` — either works |
+
+v4 idiom: the official `@layer components` examples (`.btn-primary` / `.card`) **write CSS properties directly and reference theme variables via `var(--…)`**, not via `@apply`. The official position of `@apply` in the v4 docs is "override third-party library styles", **not the standard tool for reusing utility strings**.
+
+## Complex arbitrary values → @theme token
+
+Arbitrary values are officially positioned as "**once in a while** to break out of constraints" / pixel-perfect tweaks. When complex arbitrary values like `shadow-[0_1px_3px_...]`, `ease-[cubic-bezier(...)]`, or `bg-[oklch(...)]` are reused across files, that violates this positioning — promote them to `@theme` as named tokens. The official `@theme` examples already demonstrate this pattern with `--color-X: oklch(...)` and `--ease-X: cubic-bezier(...)`.
+
 ## Preflight defaults that surprise
 
 | Element | Default | If you want different |
 |---|---|---|
-| `<button>` | `cursor: default` | `class="cursor-pointer"` 或 `@layer base { button { cursor: pointer; } }` |
+| `<button>` | `cursor: default` | `class="cursor-pointer"` or `@layer base { button { cursor: pointer; } }` |
 | `<dialog>` | `margin: 0` | `class="m-auto"` |
 | `<img>/<video>/<canvas>` | `display: block; max-width: 100%` | `class="inline"` / `class="max-w-none"` |
-| `<h1>~<h6>` | `font-size/weight: inherit` | utility class（如 `text-2xl font-bold`） |
-| `<ul>/<ol>` | `list-style: none` | `class="list-disc list-inside"`；保留 a11y 加 `role="list"` |
-| `border` color | `currentColor` | 显式 `border-gray-200` |
-| `placeholder` color | 当前文字色 50% | `@layer base { ::placeholder { color: var(--color-gray-400); } }` |
-| `[hidden]` 属性 | `display: none !important` | utility 覆盖**不行**，删除 `hidden` 属性 |
+| `<h1>~<h6>` | `font-size/weight: inherit` | utility class (e.g. `text-2xl font-bold`) |
+| `<ul>/<ol>` | `list-style: none` | `class="list-disc list-inside"`; for a11y add `role="list"` |
+| `border` color | `currentColor` | explicit `border-gray-200` |
+| `placeholder` color | current text color at 50% | `@layer base { ::placeholder { color: var(--color-gray-400); } }` |
+| `[hidden]` attribute | `display: none !important` | **cannot** be overridden by utilities — remove the `hidden` attribute |
 
-## Container queries（组件级响应式）
+## Container queries (component-level responsiveness)
 
-写可重用组件时优先用容器查询而非视口断点：
+For reusable components, prefer container queries over viewport breakpoints:
 
 ```html
 <div class="@container">
   <div class="flex flex-col @md:flex-row @max-md:gap-2">
-    <!-- 基于父 .@container 宽度，不基于视口 -->
+    <!-- relative to the parent .@container, not the viewport -->
   </div>
 </div>
 ```
 
-命名：`@container/main` + `@sm/main:`。任意尺寸：`@min-[475px]:` / `@max-[600px]:`。自定义：`@theme { --container-8xl: 96rem; }` → `@8xl:`。
+Naming: `@container/main` + `@sm/main:`. Arbitrary sizes: `@min-[475px]:` / `@max-[600px]:`. Custom: `@theme { --container-8xl: 96rem; }` → `@8xl:`.
 
-## Source detection 与 references
+## Source detection & references
 
-Tailwind v4 自动扫描除以下之外所有文件：`.gitignore` 列表 / `node_modules` / 二进制 / CSS / lock 文件。扩展用 `@source "../path"`（如 monorepo 共享 UI 库）。单文件 `<style>` 块若要用 `@apply` 或 `@variant`，顶部加 `@reference "../app.css";`。
+Tailwind v4 auto-scans every file except: anything in `.gitignore`, `node_modules`, binaries, CSS, and lock files. Extend with `@source "../path"` (e.g. a shared UI package in a monorepo). Single-file `<style>` blocks that need `@apply` or `@variant` must add `@reference "../app.css";` at the top.
 
-完整语法：https://tailwindcss.com/docs。
+Full syntax: https://tailwindcss.com/docs
 
-## 验证（写完任何样式改动 grep 一遍）
+## Verification (grep after every styling change)
 
 ```bash
-grep -rE '\[var\(--' .                       # 应改 (--xxx)
-grep -r '<style scoped>' .                   # 应删，转 utility 或 @layer components
-grep -r '@tailwind ' .                       # 应改 @import "tailwindcss"
-grep -rE '@variants|@responsive|@screen' .  # 已弃用
+grep -rE '\[var\(--' .                       # should use (--xxx)
+grep -r '<style scoped>' .                   # remove — switch to utilities or @layer components
+grep -r '@tailwind ' .                       # should use @import "tailwindcss"
+grep -rE '@variants|@responsive|@screen' .  # deprecated
 grep -rE 'bg-opacity-|text-opacity-|flex-shrink-|flex-grow-' .
-grep -r 'bg-gradient-to-' .                  # 应改 bg-linear-to-
-grep -rE 'class="[^"]*![a-z]' .              # 前缀 important
-grep -rE 'class="[^"]*(text|p|m|w|h)-\[[0-9]' .  # 数字任意值
-grep -r 'darkMode:' .                        # 应迁 @custom-variant
-grep -r '@tailwindcss/postcss' .             # Vite 项目应改 @tailwindcss/vite
+grep -r 'bg-gradient-to-' .                  # should use bg-linear-to-
+grep -rE 'class="[^"]*![a-z]' .              # prefix important
+grep -rE 'class="[^"]*(text|p|m|w|h)-\[[0-9]' .  # numeric arbitrary values
+grep -r 'darkMode:' .                        # should migrate to @custom-variant
+grep -r '@tailwindcss/postcss' .             # Vite projects should use @tailwindcss/vite
 ```

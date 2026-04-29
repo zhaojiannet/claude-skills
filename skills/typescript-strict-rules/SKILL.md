@@ -110,14 +110,14 @@ If a third-party library has weak types and you must cast, **STOP** and report:
 
 Do not silently scatter `as any` or `// @ts-ignore`.
 
-## 验证（写完任何 .ts 改动 grep 一遍）
+## Verification (grep after every .ts change)
 
 ```bash
 grep -rnE ':\s*any\b|<any>|as any' --include='*.ts' --include='*.tsx' .
 grep -rnE '@ts-ignore' --include='*.ts' --include='*.tsx' .
 grep -rnE '\bnamespace\s+\w+\s*\{' --include='*.ts' --include='*.tsx' .
-grep -rnE '^\s*enum\s+\w+\s*\{' --include='*.ts' --include='*.tsx' .  # 非 const enum
+grep -rnE '^\s*enum\s+\w+\s*\{' --include='*.ts' --include='*.tsx' .  # non-const enum
 grep -rnE 'catch\s*\(\s*\w+\s*\)\s*\{[^}]*\.message' --include='*.ts' --include='*.tsx' .
 ```
 
-完整 tsconfig 选项参考：https://www.typescriptlang.org/tsconfig
+Full tsconfig reference: https://www.typescriptlang.org/tsconfig

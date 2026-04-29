@@ -114,28 +114,28 @@ If the codebase has Options API legacy components and you must edit them, **STOP
 
 Do not silently mix Options-style patches into a `<script setup>` file or vice versa.
 
-## 验证（写完 .vue 改动 grep 一遍）
+## Verification (grep after every .vue change)
 
 ```bash
-# Options API 残留
-grep -rE 'export default \{' --include='*.vue' .          # → 改 <script setup>
+# Options API leftovers
+grep -rE 'export default \{' --include='*.vue' .          # → migrate to <script setup>
 grep -rE 'data\(\)\s*\{' --include='*.vue' .              # Options data
 grep -rE 'methods:\s*\{' --include='*.vue' .              # Options methods
-grep -rE 'mixins:\s*\[' --include='*.vue' .               # 改 composable
-grep -rE 'PropType' --include='*.vue' .                   # 改类型声明
+grep -rE 'mixins:\s*\[' --include='*.vue' .               # replace with composable
+grep -rE 'PropType' --include='*.vue' .                   # replace with type declaration
 
-# v-model 旧写法
-grep -rE "emit\('update:" --include='*.vue' .             # 看是否能改 defineModel
+# legacy v-model pattern
+grep -rE "emit\('update:" --include='*.vue' .             # check if it can move to defineModel
 
-# ref 字符串
-grep -rE 'ref="[a-zA-Z]+"' --include='*.vue' . | grep -v useTemplateRef  # 3.5+ 改 useTemplateRef
+# string ref
+grep -rE 'ref="[a-zA-Z]+"' --include='*.vue' . | grep -v useTemplateRef  # 3.5+ should use useTemplateRef
 
-# props 旧写法
-grep -rE 'defineProps\(\[' --include='*.vue' .            # 数组形式，改类型声明
-grep -rE 'withDefaults\(' --include='*.vue' .             # 3.5+ 改解构默认值
+# legacy props pattern
+grep -rE 'defineProps\(\[' --include='*.vue' .            # array form — switch to type declaration
+grep -rE 'withDefaults\(' --include='*.vue' .             # 3.5+ should use destructuring defaults
 
-# 单文件超 400 行
+# SFC over 400 lines
 find . -name '*.vue' -exec wc -l {} \; | awk '$1>400 {print}'
 ```
 
-完整 API: https://vuejs.org/api/sfc-script-setup。
+Full API: https://vuejs.org/api/sfc-script-setup

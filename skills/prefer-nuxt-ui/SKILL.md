@@ -50,7 +50,7 @@ Apply only when the project uses `@nuxt/ui ^4.0` or higher. If `package.json` pi
 - Content: `UContentNavigation` / `UContentSearch` / `UContentSearchButton` / `UContentSurround` / `UContentToc`
 - Color Mode: `UColorModeAvatar` / `UColorModeButton` / `UColorModeImage` / `UColorModeSelect` / `UColorModeSwitch`
 - i18n: `ULocaleSelect`
-- Prose（@nuxt/content markdown 渲染专用，43 个组件映射 markdown 元素，前缀 `UProse*`，通常无需手动调用）
+- Prose (for `@nuxt/content` markdown rendering — 43 components mapped to markdown elements, prefixed `UProse*`, typically auto-applied)
 
 ## Forbidden patterns
 
@@ -92,10 +92,10 @@ Do not silently fall back to raw HTML. **STOP** and report:
 
 > Need a [component description] component. Nuxt UI candidates checked: [list, e.g., UCard / UDrawer]. None fits because [specific gap]. Approve one of: (A) use a Nuxt UI component with custom slots / `ui` prop overrides, (B) compose two Nuxt UI components, (C) use a third-party Vue component (specify), (D) hand-write — only with explicit approval.
 
-## 验证（写完 .vue 改动 grep 一遍）
+## Verification (grep after every .vue change)
 
 ```bash
-# 应改 Nuxt UI 等价组件
+# should be replaced with Nuxt UI equivalents
 grep -rE '<button[^>]*>' --include='*.vue' .              # → UButton
 grep -rE '<input(?!\s+v-bind)' --include='*.vue' .        # → UInput
 grep -rE '<select[^>]*>' --include='*.vue' .              # → USelect / USelectMenu
@@ -104,9 +104,9 @@ grep -rE '<dialog[^>]*>' --include='*.vue' .              # → UModal
 grep -rE '<table[^>]*>' --include='*.vue' .               # → UTable
 grep -rE 'v-if="(isOpen|showModal|dialogOpen)"' --include='*.vue' .  # → UModal v-model
 
-# 不应出现的反模式
-grep -rE ':deep\(\.u-' --include='*.vue' .                # 内部 class 覆盖，应改 ui prop
-grep -rE 'class="(toast|modal|dropdown)' --include='*.vue' .  # 自定义 component 名碰撞
+# anti-patterns that should not appear
+grep -rE ':deep\(\.u-' --include='*.vue' .                # internal class override — use the ui prop
+grep -rE 'class="(toast|modal|dropdown)' --include='*.vue' .  # custom component name collision
 ```
 
-完整组件 API: https://ui.nuxt.com。
+Full component API: https://ui.nuxt.com

@@ -94,17 +94,17 @@ sqlc handles most CRUD plus aggregates, CTEs, and window functions. If you need:
 3. Commit both the SQL change and the generated Go output
 4. Run `go test ./...`
 
-## 验证（写完任何 sqlc 相关改动）
+## Verification (grep after every sqlc-related change)
 
 ```bash
-# 配置版本
+# config version
 grep -nE '^version:\s*"?1' **/sqlc.yaml **/sqlc.yml 2>/dev/null
 
-# 手写 SQL 调用（应改 sqlc query）
+# hand-written SQL calls (should be sqlc queries)
 grep -rnE 'db\.(Query|QueryRow|Exec)\(["`]\s*(SELECT|INSERT|UPDATE|DELETE)' --include='*.go' .
 
-# 查询命名规范
+# query naming convention
 grep -nE '^-- name:\s+\w+' db/queries/*.sql | grep -vE ':\s+(Get|Find|List|Count|Create|Update|Delete)\w+'
 ```
 
-参考：https://docs.sqlc.dev/en/latest/reference/config.html
+Reference: https://docs.sqlc.dev/en/latest/reference/config.html

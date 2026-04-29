@@ -107,12 +107,12 @@ If the page genuinely needs per-request data for the entire layout (signed-in da
 
 > Component [X] is interactive [how]. Above the fold? [yes/no]. Critical for first paint? [yes/no]. Recommended directive: [...]. Approve?
 
-## 验证（写完 .astro 改动 grep 一遍）
+## Verification (grep after every .astro change)
 
 ```bash
-grep -rnE 'client:load' --include='*.astro' .                   # 检查能否降到 visible/idle
-grep -rnE "Astro\.glob\(" --include='*.astro' --include='*.ts' .   # 改 getCollection
-grep -rnE '<Layout[^>]*client:' --include='*.astro' .           # 不要给 Layout 加 client:*
+grep -rnE 'client:load' --include='*.astro' .                   # can it be downgraded to visible/idle?
+grep -rnE "Astro\.glob\(" --include='*.astro' --include='*.ts' .   # replace with getCollection
+grep -rnE '<Layout[^>]*client:' --include='*.astro' .           # don't put client:* on Layout
 ```
 
-参考：https://docs.astro.build/en/concepts/islands/
+Reference: https://docs.astro.build/en/concepts/islands/

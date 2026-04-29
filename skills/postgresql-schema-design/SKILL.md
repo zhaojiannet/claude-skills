@@ -81,7 +81,7 @@ Allowed:
 CREATE TABLE webhook_events (
   id BIGSERIAL PRIMARY KEY,
   source text NOT NULL,
-  payload jsonb NOT NULL,        -- 第三方形状，多变
+  payload jsonb NOT NULL,        -- third-party shape, varies
   received_at timestamptz NOT NULL DEFAULT now()
 );
 ```
@@ -90,7 +90,7 @@ Forbidden:
 ```sql
 CREATE TABLE users (
   id BIGSERIAL PRIMARY KEY,
-  data jsonb NOT NULL              -- ❌ 应拆成 email/name/phone 等具体列
+  data jsonb NOT NULL              -- ❌ should be split into concrete columns (email / name / phone)
 );
 ```
 
@@ -113,14 +113,14 @@ If you need a non-standard pattern (composite primary key, partitioned table, ma
 
 > Need [pattern] for [reason]. Standard pattern would be [...]. Approve [unconventional pattern] for [specific reason]?
 
-## 验证（写完 schema/migration grep 一遍）
+## Verification (grep after every schema/migration change)
 
 ```bash
-grep -rnE '\btimestamp\b' --include='*.sql' migrations/ schema/ 2>/dev/null | grep -vE 'timestamptz|timestamp with time zone'  # 应 timestamptz
-grep -rnE 'SERIAL\s+PRIMARY' --include='*.sql' migrations/ 2>/dev/null                       # 应 BIGSERIAL
-grep -rnE '\bJSON\s+(NOT NULL|DEFAULT|,|$)' --include='*.sql' migrations/ 2>/dev/null         # 应 JSONB
+grep -rnE '\btimestamp\b' --include='*.sql' migrations/ schema/ 2>/dev/null | grep -vE 'timestamptz|timestamp with time zone'  # should be timestamptz
+grep -rnE 'SERIAL\s+PRIMARY' --include='*.sql' migrations/ 2>/dev/null                       # should be BIGSERIAL
+grep -rnE '\bJSON\s+(NOT NULL|DEFAULT|,|$)' --include='*.sql' migrations/ 2>/dev/null         # should be JSONB
 grep -rnE '\b[a-z]+[A-Z][a-zA-Z]*\b' --include='*.sql' migrations/ 2>/dev/null                # camelCase
-grep -rnE 'tbl_|col_' --include='*.sql' migrations/ 2>/dev/null                                # 前缀
+grep -rnE 'tbl_|col_' --include='*.sql' migrations/ 2>/dev/null                                # table/column prefixes
 ```
 
-参考：https://www.postgresql.org/docs/current/ddl.html
+Reference: https://www.postgresql.org/docs/current/ddl.html

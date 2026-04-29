@@ -62,7 +62,7 @@ if err := e.Shutdown(ctx); err != nil {
 func GetUser(c *echo.Context) error {
     user, err := svc.Get(c.Param("id"))
     if err != nil {
-        return err   // 不在这里 c.JSON
+        return err   // don't c.JSON here
     }
     return c.JSON(http.StatusOK, user)
 }
@@ -84,7 +84,7 @@ func GetUser(c *echo.Context) error {
     case errors.Is(err, ErrUserDisabled):
         return echo.NewHTTPError(http.StatusForbidden, "user disabled")
     case err != nil:
-        return err   // 系统错误，HTTPErrorHandler 兜底
+        return err   // system error — HTTPErrorHandler will catch it
     }
     return c.JSON(http.StatusOK, user)
 }
@@ -97,7 +97,7 @@ func GetUser(c *echo.Context) error {
 func Get(id string) (*User, error) {
     user, err := repo.Find(id)
     if err != nil {
-        return nil, fmt.Errorf("get user %s: %w", id, err)   // 用 %w 保留链
+        return nil, fmt.Errorf("get user %s: %w", id, err)   // %w preserves the chain
     }
     return user, nil
 }
@@ -124,14 +124,14 @@ func customErrorHandler(err error, c *echo.Context) {
     var he *echo.HTTPError
     if errors.As(err, &he) {
         _ = c.JSON(he.Code, APIError{
-            Code:    httpCodeName(he.Code),   // "BAD_REQUEST" / "NOT_FOUND" 等
+            Code:    httpCodeName(he.Code),   // "BAD_REQUEST" / "NOT_FOUND" etc.
             Message: fmt.Sprint(he.Message),
             TraceID: traceID,
         })
         return
     }
 
-    // 系统/未知错误：完整 stack 写日志，对外只暴露 trace_id
+    // system / unknown error: log the full stack, only expose trace_id externally
     slog.Error("internal error",
         "err", err,
         "trace_id", traceID,
@@ -171,8 +171,8 @@ func customErrorHandler(err error, c *echo.Context) {
 | `c.JSON(400, map[string]string{"err": "bad"})` | `return echo.NewHTTPError(http.StatusBadRequest, "bad")` |
 | `if err.Error() == "..." { ... }` | `if errors.Is(err, ErrFoo) { ... }` |
 | `return fmt.Errorf("get user: %v", err)` | `return fmt.Errorf("get user %s: %w", id, err)` |
-| 每路由手写 auth 检查 | `g := e.Group("/api", AuthMiddleware()); g.GET(...)` |
-| `e.Start(":8080")` 直接 fatal exit | `go e.Start(...)` + signal trap + `e.Shutdown(ctx)` |
+| Hand-written auth check on every route | `g := e.Group("/api", AuthMiddleware()); g.GET(...)` |
+| `e.Start(":8080")` with direct fatal exit | `go e.Start(...)` + signal trap + `e.Shutdown(ctx)` |
 | `if err != nil { panic(err) }` | `if err != nil { return err }` |
 | `import echo/v4` | `import echo/v5` |
 
@@ -180,16 +180,16 @@ func customErrorHandler(err error, c *echo.Context) {
 
 If you need a feature Echo does not provide (custom transport, h2c, websocket with non-standard upgrade), **STOP** and report. Do not bypass the framework with raw `http.Handler` mixed in.
 
-## 验证（写完 .go 改动 grep 一遍）
+## Verification (grep after every .go change)
 
 ```bash
 grep -rnE 'echo/v4' --include='*.go' --include='go.mod' .
 grep -rnE 'c\.JSON\([^)]*[Ss]tatus(BadRequest|NotFound|Unauthorized|Forbidden|InternalServerError)' --include='*.go' .
-grep -rnE 'err\.Error\(\)\s*==' --include='*.go' .                   # 字符串比较
-grep -rnE 'fmt\.Errorf\([^)]*%v[^)]*err\)' --include='*.go' .         # 应改 %w
+grep -rnE 'err\.Error\(\)\s*==' --include='*.go' .                   # string comparison
+grep -rnE 'fmt\.Errorf\([^)]*%v[^)]*err\)' --include='*.go' .         # should be %w
 grep -rnE 'panic\(err' --include='*.go' .
 grep -rnE 'fmt\.Println|log\.Printf' --include='*.go' .
-grep -rnE '^\s*e\.Start\(' --include='*.go' .                         # 检查 graceful shutdown
+grep -rnE '^\s*e\.Start\(' --include='*.go' .                         # check graceful shutdown
 ```
 
-参考：https://echo.labstack.com/docs
+Reference: https://echo.labstack.com/docs

@@ -101,9 +101,9 @@ fastify.post('/users', { schema: createUserSchema }, async (req, reply) => {
 ```ts
 const app = fastify()
 
-await app.register(dbPlugin)                                     // fp 包裹，全局可用 app.db
-await app.register(authPlugin, { prefix: '/api' })               // 装饰 app.authenticate
-await app.register(userRoutes, { prefix: '/api/users' })         // 用 app.db / app.authenticate
+await app.register(dbPlugin)                                     // wrapped in fp — app.db globally available
+await app.register(authPlugin, { prefix: '/api' })               // decorates app.authenticate
+await app.register(userRoutes, { prefix: '/api/users' })         // consumes app.db / app.authenticate
 
 await app.listen({ port: 3000 })
 ```
@@ -127,13 +127,13 @@ If a third-party library does not provide a Fastify plugin, **STOP** and report:
 
 > Need [library X]. Fastify plugin available: [@fastify/x or community fp wrapper]? If none, approve writing a thin fp wrapper or using `app.register(async (app) => { ... })` inline.
 
-## 验证（写完含 fastify import 的改动）
+## Verification (run after edits that import fastify)
 
 ```bash
 grep -rnE 'fastify\(\)' --include='*.ts' --include='*.js' .
-grep -rnE 'function\s*\(fastify[^)]*,\s*opts[^)]*,\s*done\)' --include='*.ts' --include='*.js' .   # done 风格
-grep -rnE 'fastify\.decorate\(' --include='*.ts' --include='*.js' . | grep -v 'fp('               # 未 fp 包裹
-grep -rnE 'fastify\.(post|put|patch|delete)\([^,]+,\s*async' --include='*.ts' --include='*.js' .   # 检查 schema 缺失
+grep -rnE 'function\s*\(fastify[^)]*,\s*opts[^)]*,\s*done\)' --include='*.ts' --include='*.js' .   # done-style callback
+grep -rnE 'fastify\.decorate\(' --include='*.ts' --include='*.js' . | grep -v 'fp('               # decorate without fp wrapper
+grep -rnE 'fastify\.(post|put|patch|delete)\([^,]+,\s*async' --include='*.ts' --include='*.js' .   # check missing schema
 ```
 
-参考：https://fastify.dev/docs/latest/Reference/Plugins/
+Reference: https://fastify.dev/docs/latest/Reference/Plugins/

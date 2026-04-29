@@ -55,7 +55,7 @@ PG 11+ accepts a default for the add step that does not rewrite the table:
 
 ```sql
 ALTER TABLE users ADD COLUMN status text NOT NULL DEFAULT 'active';
-ALTER TABLE users ALTER COLUMN status DROP DEFAULT;  -- 仅当 default 只是为了 add
+ALTER TABLE users ALTER COLUMN status DROP DEFAULT;  -- only if the default existed solely for the ADD step
 ```
 
 ## Safe pattern: rename column
@@ -72,7 +72,7 @@ ALTER TABLE users DROP COLUMN email;
 ## Safe pattern: large index
 
 ```sql
--- 单独文件，不写 BEGIN/COMMIT
+-- separate file, no BEGIN/COMMIT
 CREATE INDEX CONCURRENTLY idx_users_org_id ON users(org_id);
 ```
 
@@ -94,15 +94,15 @@ Then `DROP INDEX` and recreate.
 > 3. The change is rolled out after the code that stops using it.
 > Approve to proceed?
 
-## 验证（写完任何 migration grep 一遍）
+## Verification (grep after every migration change)
 
 ```bash
 grep -rnE 'DROP\s+TABLE' --include='*.sql' migrations/ 2>/dev/null | grep -vi 'IF EXISTS'
 grep -rnE '^\s*TRUNCATE\b' --include='*.sql' migrations/ 2>/dev/null
-grep -rnE 'DELETE\s+FROM\s+\w+\s*;' --include='*.sql' migrations/ 2>/dev/null      # DELETE 无 WHERE
-grep -rnE 'ADD\s+COLUMN\s+\w+\s+\w+\s+NOT\s+NULL\s*;' --include='*.sql' migrations/ 2>/dev/null   # 无默认值
+grep -rnE 'DELETE\s+FROM\s+\w+\s*;' --include='*.sql' migrations/ 2>/dev/null      # DELETE without WHERE
+grep -rnE 'ADD\s+COLUMN\s+\w+\s+\w+\s+NOT\s+NULL\s*;' --include='*.sql' migrations/ 2>/dev/null   # no default value
 grep -rnE '^\s*CREATE\s+INDEX\s+' --include='*.sql' migrations/ 2>/dev/null | grep -v 'CONCURRENTLY'
-grep -rL 'BEGIN' migrations/*.sql 2>/dev/null   # 缺事务包裹
+grep -rL 'BEGIN' migrations/*.sql 2>/dev/null   # missing transaction wrapper
 ```
 
-参考：https://www.postgresql.org/docs/current/sql-altertable.html
+Reference: https://www.postgresql.org/docs/current/sql-altertable.html
