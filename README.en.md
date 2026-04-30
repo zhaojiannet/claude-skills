@@ -31,32 +31,39 @@ Run inside Claude Code:
 # 1. Register the marketplace
 /plugin marketplace add zhaojiannet/claude-skills
 
-# 2. Install the plugins you need
-/plugin install vue-skills@lockstep-run             # Vue / Nuxt projects
-/plugin install tailwind-skills@lockstep-run        # any project using Tailwind
-/plugin install typescript-skills@lockstep-run      # any TypeScript project
-/plugin install go-skills@lockstep-run              # Go + Echo + sqlc backend
-/plugin install node-skills@lockstep-run            # Node + Fastify backend
-/plugin install postgres-skills@lockstep-run        # PostgreSQL projects
-/plugin install astro-skills@lockstep-run           # Astro static sites
+# 2. Install the single plugin (ships all 10 skills)
+/plugin install lockstep@lockstep-run
 
 # 3. Reload to activate
 /reload-plugins
 ```
 
-Verify: type `/plugin` and check the **Installed** tab. Ask Claude `What skills are available?` to confirm the skills are listed.
+> v0.4 collapses the previous seven plugins into a single `lockstep` plugin. Every skill activates automatically by file `paths`, so you install once regardless of project stack.  
+> If you previously installed `vue-skills` / `tailwind-skills` / `typescript-skills` / `go-skills` / `node-skills` / `postgres-skills` / `astro-skills`, uninstall them all first (see Upgrade below).
 
-## Plugins
+Verify: type `/plugin` and check the **Installed** tab — you should see `lockstep`. Ask Claude `What skills are available?` to confirm the skills are listed.
 
-| Plugin | Skills | For |
-|---|---|---|
-| `vue-skills` | `prefer-nuxt-ui` / `vue-component-conventions` | Vue / Nuxt projects |
-| `tailwind-skills` | `tailwind-utility-first` | any project using Tailwind (Vue / React / Astro / plain HTML) |
-| `typescript-skills` | `typescript-strict-rules` | any TypeScript project |
-| `go-skills` | `echo-handler-patterns` / `sqlc-codegen-rules` | Go + Echo v5 + sqlc + PostgreSQL |
-| `node-skills` | `fastify-plugin-patterns` | Node + Fastify v5 |
-| `postgres-skills` | `postgresql-schema-design` / `postgresql-migration-safety` | PostgreSQL schema / migrations |
-| `astro-skills` | `astro-static-first` | Astro 6+ static sites |
+## Upgrade (from v0.3)
+
+```bash
+# 1. Uninstall the old seven plugins
+/plugin uninstall vue-skills@lockstep-run
+/plugin uninstall tailwind-skills@lockstep-run
+/plugin uninstall typescript-skills@lockstep-run
+/plugin uninstall go-skills@lockstep-run
+/plugin uninstall node-skills@lockstep-run
+/plugin uninstall postgres-skills@lockstep-run
+/plugin uninstall astro-skills@lockstep-run
+
+# 2. Pull the latest marketplace metadata
+/plugin marketplace update lockstep-run
+
+# 3. Install the merged plugin
+/plugin install lockstep@lockstep-run
+
+# 4. Reload
+/reload-plugins
+```
 
 ## Skills
 
@@ -76,7 +83,7 @@ Verify: type `/plugin` and check the **Installed** tab. Ask Claude `What skills 
 How they activate:
 
 - **Automatic**: Claude Code loads the skill when you edit a file matching the `paths` glob.
-- **Manual**: type `/<plugin-name>:<skill-name>`, e.g. `/go-skills:echo-handler-patterns`.
+- **Manual**: type `/lockstep:<skill-name>`, e.g. `/lockstep:echo-handler-patterns`.
 
 ## How it works
 
@@ -93,7 +100,7 @@ Claude Code loads the matching SKILL.md into context when you open a file matchi
 
 ## Roadmap
 
-The first two waves (7 plugins, 10 skills) cover the mainstream stack: Vue / Tailwind / TypeScript / Go+Echo+sqlc / Node+Fastify / PostgreSQL / Astro. Future plugins land based on real-world feedback.
+The initial 10 skills cover the mainstream stack: Vue / Tailwind / TypeScript / Go+Echo+sqlc / Node+Fastify / PostgreSQL / Astro. Future skills land based on real-world feedback.
 
 ## Development
 

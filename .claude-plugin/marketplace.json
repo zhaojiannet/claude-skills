@@ -6,73 +6,25 @@
     "url": "https://www.zhaojian.net"
   },
   "metadata": {
-    "description": "Strict skill marketplace enforcing latest official APIs across modern web stacks. Each plugin bundles framework-specific skills that forbid deprecated patterns and force current best practices.",
-    "version": "0.3.0"
+    "description": "Strict skill marketplace enforcing latest official APIs across modern web stacks. A single plugin bundles every skill: deprecated patterns are forbidden, current best practices are forced.",
+    "version": "0.4.0"
   },
   "plugins": [
     {
-      "name": "vue-skills",
-      "description": "Vue 3.5+ / Nuxt 4 / @nuxt/ui 4 strict conventions. Forbids Options API, mixins, hand-written raw <button>/<input>/<dialog> when Nuxt UI provides equivalents; forces <script setup>, defineModel, useTemplateRef, type-safe defineProps, and Nuxt UI v4 components.",
+      "name": "lockstep",
+      "description": "Strict conventions for Vue 3.5 / Nuxt UI v4 / Tailwind v4 / TypeScript / Go Echo v5 + sqlc / Node Fastify v5 / PostgreSQL schema+migrations / Astro 6. Each skill activates by file path. Forbids <style scoped>, any, @ts-ignore, bg-opacity-*, bg-gradient-to-*, hand-written raw <button>/<input> when Nuxt UI applies, bare DROP TABLE, single-shot ALTER TABLE ... NOT NULL. Forces <script setup> + defineModel, oklch() colors, Echo HTTPErrorHandler, sqlc generated Querier, three-step NOT NULL migrations, client:visible / server:defer over client:load.",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/prefer-nuxt-ui",
-        "./skills/vue-component-conventions"
-      ]
-    },
-    {
-      "name": "tailwind-skills",
-      "description": "Tailwind CSS v4 utility-first conventions for any project (Vue/React/Astro/HTML). Forbids <style scoped>, raw CSS, [var(--xxx)] arbitrary values, deprecated utilities (bg-opacity-*, flex-shrink-*, bg-gradient-to-r); forces oklch() colors, paren syntax bg-(--var), @custom-variant dark, @tailwindcss/vite for Vite.",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/tailwind-utility-first"
-      ]
-    },
-    {
-      "name": "typescript-skills",
-      "description": "TypeScript strict type-checking conventions. Forbids any, as any, // @ts-ignore, namespace, non-const enum, untyped catch; forces strict tsconfig, unknown over any, type inference, ESM imports, const + as const over enum, useUnknownInCatchVariables narrowing.",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/typescript-strict-rules"
-      ]
-    },
-    {
-      "name": "go-skills",
-      "description": "Go conventions for Echo v5 + sqlc + PostgreSQL. Echo handler model with HTTPError + HTTPErrorHandler centralized error handling, sentinel errors with errors.Is/errors.As, %w wrap chain, graceful shutdown. sqlc v2 codegen with generated Querier interface, no hand-written SQL when sqlc applies.",
-      "source": "./",
-      "strict": false,
-      "skills": [
+        "./skills/vue-component-conventions",
+        "./skills/tailwind-utility-first",
+        "./skills/typescript-strict-rules",
         "./skills/echo-handler-patterns",
-        "./skills/sqlc-codegen-rules"
-      ]
-    },
-    {
-      "name": "node-skills",
-      "description": "Fastify v5 plugin and route conventions for Node/TypeScript. Async plugins, fastify-plugin (fp) for cross-scope decorators, JSON schema validation on every route, encapsulation by default, graceful onClose shutdown.",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/fastify-plugin-patterns"
-      ]
-    },
-    {
-      "name": "postgres-skills",
-      "description": "PostgreSQL schema design and migration safety. Snake_case naming, BIGSERIAL/UUID PK, timestamptz, explicit FK ON DELETE, jsonb only for schemaless data. Migration safety: idempotent guards, no destructive ops without approval, NOT NULL with default or three-step migration, CREATE INDEX CONCURRENTLY, no atomic column rename.",
-      "source": "./",
-      "strict": false,
-      "skills": [
+        "./skills/sqlc-codegen-rules",
+        "./skills/fastify-plugin-patterns",
         "./skills/postgresql-schema-design",
-        "./skills/postgresql-migration-safety"
-      ]
-    },
-    {
-      "name": "astro-skills",
-      "description": "Astro 6+ static-first conventions. Zero JS by default, pick lightest client:* directive (visible/idle over load), server:defer for personalized islands instead of full SSR, Content Collections with typed schemas over Astro.glob.",
-      "source": "./",
-      "strict": false,
-      "skills": [
+        "./skills/postgresql-migration-safety",
         "./skills/astro-static-first"
       ]
     }

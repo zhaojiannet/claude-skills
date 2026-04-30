@@ -31,32 +31,39 @@
 # 1. 註冊本 marketplace
 /plugin marketplace add zhaojiannet/claude-skills
 
-# 2. 安裝需要的 plugin（按專案技術棧選）
-/plugin install vue-skills@lockstep-run             # Vue / Nuxt 專案
-/plugin install tailwind-skills@lockstep-run        # 任何用 Tailwind 的專案
-/plugin install typescript-skills@lockstep-run      # 任何 TypeScript 專案
-/plugin install go-skills@lockstep-run              # Go + Echo + sqlc 後端
-/plugin install node-skills@lockstep-run            # Node + Fastify 後端
-/plugin install postgres-skills@lockstep-run        # PostgreSQL 專案
-/plugin install astro-skills@lockstep-run           # Astro 靜態站
+# 2. 安裝唯一的 plugin（含全部 10 個 skill）
+/plugin install lockstep@lockstep-run
 
 # 3. 重新載入使其生效
 /reload-plugins
 ```
 
-驗證：輸入 `/plugin` 進 **Installed** tab，能看到裝好的 plugin。再用 `What skills are available?` 讓 Claude 列出 skill。
+> v0.4 起合併為單一 plugin。skill 全部按檔案類型 `paths` 自動啟動，裝一次即可，按專案技術棧無需挑選。  
+> 老版本（v0.3 及之前）裝過 `vue-skills` / `tailwind-skills` / `typescript-skills` / `go-skills` / `node-skills` / `postgres-skills` / `astro-skills` 的，先全卸再裝新版（見下方 Upgrade）。
 
-## Plugins
+驗證：輸入 `/plugin` 進 **Installed** tab，能看到 `lockstep`。再用 `What skills are available?` 讓 Claude 列出 skill。
 
-| Plugin | 含 skill | 適用 |
-|---|---|---|
-| `vue-skills` | `prefer-nuxt-ui` / `vue-component-conventions` | Vue / Nuxt 專案 |
-| `tailwind-skills` | `tailwind-utility-first` | 任何用 Tailwind 的專案（Vue / React / Astro / 純 HTML） |
-| `typescript-skills` | `typescript-strict-rules` | 任何 TypeScript 專案 |
-| `go-skills` | `echo-handler-patterns` / `sqlc-codegen-rules` | Go + Echo v5 + sqlc + PostgreSQL |
-| `node-skills` | `fastify-plugin-patterns` | Node + Fastify v5 |
-| `postgres-skills` | `postgresql-schema-design` / `postgresql-migration-safety` | PostgreSQL schema / migrations |
-| `astro-skills` | `astro-static-first` | Astro 6+ 靜態站 |
+## Upgrade（從 v0.3 升級）
+
+```bash
+# 1. 卸載老 7 個 plugin
+/plugin uninstall vue-skills@lockstep-run
+/plugin uninstall tailwind-skills@lockstep-run
+/plugin uninstall typescript-skills@lockstep-run
+/plugin uninstall go-skills@lockstep-run
+/plugin uninstall node-skills@lockstep-run
+/plugin uninstall postgres-skills@lockstep-run
+/plugin uninstall astro-skills@lockstep-run
+
+# 2. 拉取 marketplace 最新版
+/plugin marketplace update lockstep-run
+
+# 3. 裝新合併 plugin
+/plugin install lockstep@lockstep-run
+
+# 4. 重新載入
+/reload-plugins
+```
 
 ## Skills
 
@@ -76,7 +83,7 @@
 啟動方式：
 
 - **自動**：編輯匹配 `paths` 的檔案時 Claude Code 自動 load skill 進 context
-- **手動**：`/<plugin-name>:<skill-name>`，例如 `/go-skills:echo-handler-patterns`
+- **手動**：`/lockstep:<skill-name>`，例如 `/lockstep:echo-handler-patterns`
 
 ## How it works
 
@@ -93,7 +100,7 @@ Claude Code 在編輯匹配 `paths` 的檔案時把對應 SKILL.md 內容載入 
 
 ## Roadmap
 
-第一/二輪 7 個 plugin、10 個 skill 已覆蓋主流前後端棧（Vue / Tailwind / TypeScript / Go+Echo+sqlc / Node+Fastify / PostgreSQL / Astro）。後續按真實使用回饋擴展。
+首版 10 個 skill 已覆蓋主流前後端棧（Vue / Tailwind / TypeScript / Go+Echo+sqlc / Node+Fastify / PostgreSQL / Astro）。後續按真實使用回饋擴展。
 
 ## Development
 
