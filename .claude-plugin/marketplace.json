@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Strict skill marketplace enforcing latest official APIs across modern web stacks. A single plugin bundles every skill: deprecated patterns are forbidden, current best practices are forced.",
-    "version": "0.4.1"
+    "version": "0.4.2"
   },
   "plugins": [
     {
