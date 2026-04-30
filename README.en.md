@@ -32,16 +32,16 @@ Run inside Claude Code:
 /plugin marketplace add zhaojiannet/claude-skills
 
 # 2. Install the single plugin (ships all 10 skills)
-/plugin install lockstep@lockstep-run
+/plugin install lockstep-run@lockstep-run
 
 # 3. Reload to activate
 /reload-plugins
 ```
 
-> v0.4 collapses the previous seven plugins into a single `lockstep` plugin. Every skill activates automatically by file `paths`, so you install once regardless of project stack.  
+> v0.4 collapses the previous seven plugins into a single `lockstep-run` plugin. Every skill activates automatically by file `paths`, so you install once regardless of project stack.  
 > If you previously installed `vue-skills` / `tailwind-skills` / `typescript-skills` / `go-skills` / `node-skills` / `postgres-skills` / `astro-skills`, uninstall them all first (see Upgrade below).
 
-Verify: type `/plugin` and check the **Installed** tab — you should see `lockstep`. Ask Claude `What skills are available?` to confirm the skills are listed.
+Verify: type `/plugin` and check the **Installed** tab — you should see `lockstep-run`. Ask Claude `What skills are available?` to confirm the skills are listed.
 
 ## Upgrade (from v0.3)
 
@@ -59,7 +59,7 @@ Verify: type `/plugin` and check the **Installed** tab — you should see `locks
 /plugin marketplace update lockstep-run
 
 # 3. Install the merged plugin
-/plugin install lockstep@lockstep-run
+/plugin install lockstep-run@lockstep-run
 
 # 4. Reload
 /reload-plugins
@@ -83,7 +83,7 @@ Verify: type `/plugin` and check the **Installed** tab — you should see `locks
 How they activate:
 
 - **Automatic**: Claude Code loads the skill when you edit a file matching the `paths` glob.
-- **Manual**: type `/lockstep:<skill-name>`, e.g. `/lockstep:echo-handler-patterns`.
+- **Manual**: type `/lockstep-run:<skill-name>`, e.g. `/lockstep-run:echo-handler-patterns`.
 
 ## How it works
 

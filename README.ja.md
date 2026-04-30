@@ -32,16 +32,16 @@ Claude Code の中で実行してください：
 /plugin marketplace add zhaojiannet/claude-skills
 
 # 2. 唯一の plugin をインストール（10 個の skill を含む）
-/plugin install lockstep@lockstep-run
+/plugin install lockstep-run@lockstep-run
 
 # 3. 再読み込みして有効化
 /reload-plugins
 ```
 
-> v0.4 から 7 個の plugin を 1 個の `lockstep` plugin に統合しました。skill はすべてファイル `paths` で自動的に有効化されるため、プロジェクトのスタックに関係なく一度のインストールで完了します。  
+> v0.4 から 7 個の plugin を 1 個の `lockstep-run` plugin に統合しました。skill はすべてファイル `paths` で自動的に有効化されるため、プロジェクトのスタックに関係なく一度のインストールで完了します。  
 > 旧版（v0.3 以前）で `vue-skills` / `tailwind-skills` / `typescript-skills` / `go-skills` / `node-skills` / `postgres-skills` / `astro-skills` をインストールしていた場合は、先に全部アンインストールしてから新版を入れてください（下記 Upgrade を参照）。
 
-確認：`/plugin` を入力して **Installed** タブで `lockstep` が確認できます。`What skills are available?` を Claude に聞けば、利用できる skill 一覧が出ます。
+確認：`/plugin` を入力して **Installed** タブで `lockstep-run` が確認できます。`What skills are available?` を Claude に聞けば、利用できる skill 一覧が出ます。
 
 ## Upgrade（v0.3 からのアップグレード）
 
@@ -59,7 +59,7 @@ Claude Code の中で実行してください：
 /plugin marketplace update lockstep-run
 
 # 3. 統合された plugin をインストール
-/plugin install lockstep@lockstep-run
+/plugin install lockstep-run@lockstep-run
 
 # 4. 再読み込み
 /reload-plugins
@@ -83,7 +83,7 @@ Claude Code の中で実行してください：
 起動方法：
 
 - **自動**：`paths` glob にマッチするファイルを編集すると Claude Code が自動的に skill を context に読み込みます
-- **手動**：`/lockstep:<skill-name>` の形で呼び出します。例：`/lockstep:echo-handler-patterns`
+- **手動**：`/lockstep-run:<skill-name>` の形で呼び出します。例：`/lockstep-run:echo-handler-patterns`
 
 ## How it works
 

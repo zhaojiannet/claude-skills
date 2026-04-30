@@ -32,7 +32,7 @@
 /plugin marketplace add zhaojiannet/claude-skills
 
 # 2. 安装唯一的 plugin（含全部 10 个 skill）
-/plugin install lockstep@lockstep-run
+/plugin install lockstep-run@lockstep-run
 
 # 3. 重新加载使其生效
 /reload-plugins
@@ -41,7 +41,7 @@
 > v0.4 起合并为单一 plugin。skill 全部按文件类型 `paths` 自动激活，装一次即可，按项目栈无需挑选。  
 > 老版本（v0.3 及之前）装过 `vue-skills` / `tailwind-skills` / `typescript-skills` / `go-skills` / `node-skills` / `postgres-skills` / `astro-skills` 的，先全卸再装新版（见下方 Upgrade）。
 
-验证：输入 `/plugin` 进 **Installed** tab，能看到 `lockstep`。再用 `What skills are available?` 让 Claude 列出 skill。
+验证：输入 `/plugin` 进 **Installed** tab，能看到 `lockstep-run`。再用 `What skills are available?` 让 Claude 列出 skill。
 
 ## Upgrade（从 v0.3 升级）
 
@@ -59,7 +59,7 @@
 /plugin marketplace update lockstep-run
 
 # 3. 装新合并 plugin
-/plugin install lockstep@lockstep-run
+/plugin install lockstep-run@lockstep-run
 
 # 4. 重新加载
 /reload-plugins
@@ -83,7 +83,7 @@
 激活方式：
 
 - **自动**：编辑匹配 `paths` 的文件时 Claude Code 自动 load skill 进 context
-- **手动**：`/lockstep:<skill-name>`，例如 `/lockstep:echo-handler-patterns`
+- **手动**：`/lockstep-run:<skill-name>`，例如 `/lockstep-run:echo-handler-patterns`
 
 ## How it works
 
